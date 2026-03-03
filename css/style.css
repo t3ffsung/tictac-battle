@@ -55,6 +55,11 @@ body {
     box-shadow: 0 0 20px rgba(0,245,255,0.2);
 }
 
+.profile-avatar {
+    width: 80px;
+    margin-bottom: 10px;
+}
+
 .btn {
     width: 100%;
     padding: 12px;
@@ -96,16 +101,18 @@ input {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
+/* Modal */
 .modal {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.85);
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 999;
 }
 
 .modal-content {
@@ -127,6 +134,7 @@ input {
     width: 100%;
     cursor: pointer;
     border-radius: 10px;
+    border: 2px solid transparent;
     transition: 0.2s;
 }
 
