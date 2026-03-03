@@ -8,11 +8,12 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div id="lobbyOverlay" class="modal">
+    <div id="lobbyOverlay" class="modal" style="display:flex;">
         <div class="modal-content">
             <div class="loader"></div>
             <h3>Waiting for Opponent...</h3>
-            <p>Room Code: <span id="displayRoomCode" style="color:#39ff14; font-weight:bold;"></span></p>
+            <p style="margin: 15px 0;">Share Room Code:</p>
+            <h2 id="displayRoomCode" style="color:#39ff14; font-size: 2.5rem; letter-spacing: 3px;"></h2>
             <button class="btn ghost" onclick="location.href='index.html'">Cancel</button>
         </div>
     </div>
