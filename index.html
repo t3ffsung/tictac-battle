@@ -8,11 +8,12 @@
     <meta name="theme-color" content="#0a0a12">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" href="https://api.dicebear.com/7.x/bottts/svg?seed=Cyber" type="image/svg+xml">
     <link rel="apple-touch-icon" href="https://api.dicebear.com/7.x/bottts/svg?seed=Cyber">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="theme-default">
     <div class="background-glow"></div>
     <div class="container">
         <h1 class="logo">TicTac <span>Battle</span></h1>
@@ -22,17 +23,35 @@
             <div class="profile-info">
                 <h2 id="profileName"></h2>
                 <p>Points: <span id="profileRating">1000</span></p>
+                <button id="editProfileBtn" class="btn ghost" style="padding: 5px; font-size: 0.6rem;">Edit Profile</button>
             </div>
         </div>
 
         <div class="card lobby-card">
-            <button class="btn primary" id="createRoomBtn">Create Room (Bet 50)</button>
-            <div class="join-section">
+            <select id="betAmount" class="btn ghost" style="margin-bottom: 10px; background: rgba(0,0,0,0.5);">
+                <option value="50">Bet: 50 Points</option>
+                <option value="100">Bet: 100 Points</option>
+            </select>
+            <button class="btn primary" id="createRoomBtn">Create Room</button>
+            
+            <div class="join-section" style="margin-top: 15px;">
                 <input type="text" id="roomCodeInput" placeholder="Room Code">
                 <button class="btn secondary" id="joinRoomBtn">Join</button>
             </div>
+
+            <button class="btn ghost" id="playBotBtn" style="margin-top: 15px; border-color: #ff00ff; color: #ff00ff;">Play vs Bot (Offline)</button>
+            
             <button class="btn ghost" id="leaderboardBtn">Leaderboard</button>
         </div>
+
+        <select id="themeSelector" class="btn ghost" style="margin-top: 10px;">
+            <option value="theme-default">Cyber Theme</option>
+            <option value="theme-neon">Neon Glow</option>
+            <option value="theme-dark">Pitch Black</option>
+            <option value="theme-retro">Retro 8-Bit</option>
+            <option value="theme-female">Blossom Pink</option>
+        </select>
+
         <button id="audioToggleBtn" class="btn ghost" style="margin-top:10px;">🔊 Audio: ON</button>
         <button id="logoutBtn" class="btn ghost hidden" style="margin-top:10px; border-color:#ff3939; color:#ff3939;">🚪 Logout</button>
     </div>
@@ -41,7 +60,17 @@
         <div class="modal-content" style="text-align: center;">
             <h2>Welcome Warrior</h2>
             <p style="margin: 15px 0; font-size: 0.9rem;">Sign in to sync your profile & points.</p>
-            <button class="btn primary" id="googleSignInBtn">Sign In with Google</button>
+            <button class="btn primary" id="googleSignInBtn" style="margin-bottom: 10px;">Google</button>
+            <button class="btn secondary" id="facebookSignInBtn" style="margin-bottom: 10px; background: #1877F2; color: white;">Facebook</button>
+            <button class="btn ghost" id="phoneSignInBtn" style="color: white; border-color: white;">Phone Number</button>
+        </div>
+    </div>
+
+    <div id="dailyRewardModal" class="modal" style="display:none">
+        <div class="modal-content" style="text-align: center;">
+            <h2>Daily Login!</h2>
+            <p style="color: #39ff14; font-size: 1.5rem; margin: 15px 0;">+500 Points</p>
+            <button class="btn primary" id="claimRewardBtn">Claim Reward</button>
         </div>
     </div>
 
