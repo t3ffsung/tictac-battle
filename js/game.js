@@ -1,4 +1,3 @@
-// game.js
 import { database } from "./firebase.js";
 import {
   ref,
@@ -6,40 +5,59 @@ import {
   update
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-const urlParams = new URLSearchParams(window.location.search);
-const roomId = urlParams.get("room");
+document.addEventListener("DOMContentLoaded", () => {
 
-const cells = document.querySelectorAll(".cell");
-const statusText = document.getElementById("status");
+  const urlParams = new URLSearchParams(window.location.search);
+  const roomId = urlParams.get("room");
 
-const roomRef = ref(database, "rooms/" + roomId);
+  if (!roomId) {
+    window.location.href = "/";
+    return;
+  }
 
-onValue(roomRef, (snapshot) => {
-  const data = snapshot.val();
-  if (!data) return;
+  const roomRef = ref(database, "rooms/" + roomId);
 
-  data.board.forEach((value, index) => {
-    cells[index].textContent = value;
+  const roomCodeDisplay = document.querySelector(".room-code-text");
+
+  if (roomCodeDisplay) {
+    roomCodeDisplay.textContent = roomId;
+  }
+
+  const cells = document.querySelectorAll(".cell");
+
+  onValue(roomRef, (snapshot) => {
+    const data = snapshot.val();
+    if (!data) return;
+
+    if (data.board && cells.length === 9) {
+      data.board.forEach((value, index) => {
+        if (cells[index]) {
+          cells[index].textContent = value;
+        }
+      });
+    }
   });
 
-  statusText.textContent = "Turn: " + data.turn;
-});
+  cells.forEach((cell, index) => {
+    cell.addEventListener("click", () => {
 
-cells.forEach((cell, index) => {
-  cell.addEventListener("click", () => {
-    onValue(roomRef, (snapshot) => {
-      const data = snapshot.val();
-      if (!data) return;
+      onValue(roomRef, (snapshot) => {
+        const data = snapshot.val();
+        if (!data) return;
 
-      if (data.board[index] === "") {
-        const newBoard = [...data.board];
-        newBoard[index] = data.turn;
+        if (data.board[index] === "") {
+          const newBoard = [...data.board];
+          newBoard[index] = data.turn;
 
-        update(roomRef, {
-          board: newBoard,
-          turn: data.turn === "X" ? "O" : "X"
-        });
-      }
-    }, { onlyOnce: true });
+          update(roomRef, {
+            board: newBoard,
+            turn: data.turn === "X" ? "O" : "X"
+          });
+        }
+
+      }, { onlyOnce: true });
+
+    });
   });
+
 });
