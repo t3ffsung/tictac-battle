@@ -7,6 +7,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<script src="js/auth.js" defer></script>
 
 </head>
 <body>
@@ -18,7 +19,7 @@
     <h1 class="logo">TicTac <span>Battle</span></h1>
 
     <div id="profileCard" class="card hidden">
-        <img id="profileAvatar" src="" alt="">
+        <img id="profileAvatar" class="profile-avatar" src="" alt="">
         <h2 id="profileName"></h2>
         <p>Rating: <span id="profileRating">1000</span></p>
     </div>
@@ -37,7 +38,7 @@
 </div>
 
 <!-- Player Setup Modal -->
-<div id="setupModal" class="modal hidden">
+<div id="setupModal" class="modal">
     <div class="modal-content">
         <h2>Create Your Player</h2>
 
@@ -54,8 +55,6 @@
         <button class="btn primary" id="saveProfileBtn">Save & Enter Arena</button>
     </div>
 </div>
-
-<script src="js/auth.js"></script>
 
 </body>
 </html>
