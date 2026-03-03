@@ -16,7 +16,7 @@
             <img id="profileAvatar" class="profile-avatar" src="" alt="Avatar">
             <div class="profile-info">
                 <h2 id="profileName"></h2>
-                <p>Rating: <span id="profileRating">1000</span></p>
+                <p>Points: <span id="profileRating">1000</span></p>
             </div>
         </div>
 
@@ -28,20 +28,14 @@
             </div>
             <button class="btn ghost" id="leaderboardBtn">Leaderboard</button>
         </div>
+        <button id="audioToggleBtn" class="btn ghost" style="margin-top:10px;">🔊 Audio: ON</button>
     </div>
 
     <div id="setupModal" class="modal">
-        <div class="modal-content">
-            <h2>New Warrior</h2>
-            <input type="text" id="playerNameInput" placeholder="Enter Name">
-            <div class="avatar-grid">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Cyber" class="avatar-option">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Ninja" class="avatar-option">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Alien" class="avatar-option">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=King" class="avatar-option">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Warrior" class="avatar-option">
-            </div>
-            <button class="btn primary" id="saveProfileBtn">Enter Arena</button>
+        <div class="modal-content" style="text-align: center;">
+            <h2>Welcome Warrior</h2>
+            <p style="margin: 15px 0; font-size: 0.9rem;">Sign in to sync your profile & points.</p>
+            <button class="btn primary" id="googleSignInBtn">Sign In with Google</button>
         </div>
     </div>
 
