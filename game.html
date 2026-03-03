@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TicTac Battle - Game</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+
+<div class="background-glow"></div>
+
+<div class="container">
+
+    <h1 class="logo">Battle Room</h1>
+
+    <div class="card">
+        <h2>Room Code:</h2>
+        <h2 id="roomCodeDisplay"></h2>
+        <p id="roomStatus">Waiting for opponent...</p>
+    </div>
+
+    <div id="board" class="board hidden"></div>
+
+    <button class="btn ghost" onclick="window.location.href='index.html'">Exit</button>
+
+</div>
+
+<script type="module" src="js/game.js"></script>
+
+</body>
+</html>
