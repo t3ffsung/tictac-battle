@@ -1,47 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TicTac Battle - Game</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battle Arena</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
-
-<div class="background-glow"></div>
-
-<div class="container">
-
-    <h1 class="logo">Battle Room</h1>
-
-    <div class="card">
-
-        <h2>Room Code:</h2>
-        <p id="roomCodeText">Loading...</p>
-
+    <div id="lobbyOverlay" class="modal">
+        <div class="modal-content">
+            <div class="loader"></div>
+            <h3>Waiting for Opponent...</h3>
+            <p>Room Code: <span id="displayRoomCode" style="color:#39ff14; font-weight:bold;"></span></p>
+            <button class="btn ghost" onclick="location.href='index.html'">Cancel</button>
+        </div>
     </div>
 
-    <div class="board" id="board">
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
+    <div class="container">
+        <div class="game-header">
+            <div id="playerX" class="p-tag">X: Waiting...</div>
+            <div class="pot-tag">Pot: 100 🪙</div>
+            <div id="playerO" class="p-tag">O: Waiting...</div>
+        </div>
+
+        <div class="board-container">
+            <div class="board" id="board">
+                <div class="cell" data-index="0"></div>
+                <div class="cell" data-index="1"></div>
+                <div class="cell" data-index="2"></div>
+                <div class="cell" data-index="3"></div>
+                <div class="cell" data-index="4"></div>
+                <div class="cell" data-index="5"></div>
+                <div class="cell" data-index="6"></div>
+                <div class="cell" data-index="7"></div>
+                <div class="cell" data-index="8"></div>
+            </div>
+            <svg id="winLine" viewBox="0 0 300 300"></svg>
+        </div>
+
+        <div id="gameStatus" class="status-msg">Your Turn</div>
+        <button id="exitBtn" class="btn ghost">Exit Arena</button>
     </div>
 
-    <button id="exitBtn" class="btn secondary">Exit</button>
-
-</div>
-
-<script type="module" src="js/firebase.js"></script>
-<script type="module" src="js/game.js"></script>
-
+    <script type="module" src="js/game.js"></script>
 </body>
 </html>
