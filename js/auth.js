@@ -14,24 +14,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let selectedAvatar = null;
 
-    avatarOptions.forEach(opt => opt.addEventListener("click", function() {
-        avatarOptions.forEach(o => o.classList.remove("selected"));
-        this.classList.add("selected");
-        selectedAvatar = this.src;
-    }));
+    // Avatar Selection
+    avatarOptions.forEach(opt => {
+        opt.addEventListener("click", function() {
+            avatarOptions.forEach(o => o.classList.remove("selected"));
+            this.classList.add("selected");
+            selectedAvatar = this.src;
+        });
+    });
 
+    // FIX: Save Button Logic
     saveProfileBtn.addEventListener("click", async () => {
         const name = playerNameInput.value.trim();
-        if (!name || !selectedAvatar) return alert("Select name and avatar!");
         
-        const profile = { name, avatar: selectedAvatar, rating: 1000, id: Math.random().toString(36).substr(2, 9) };
-        localStorage.setItem("playerProfile", JSON.stringify(profile));
-        
-        // Save to Firestore Leaderboard
-        await setDoc(doc(db, "leaderboard", profile.id), profile);
-        
-        setupModal.style.display = "none";
-        showProfile();
+        if (!name) return alert("Please enter a name!");
+        if (!selectedAvatar) return alert("Please select an avatar!");
+
+        const playerStats = {
+            name: name,
+            avatar: selectedAvatar,
+            rating: 1000,
+            id: 'p_' + Math.random().toString(36).substr(2, 9)
+        };
+
+        try {
+            // Save locally first so button "works" even if DB fails
+            localStorage.setItem("playerProfile", JSON.stringify(playerStats));
+            
+            // Try saving to Firestore for Global Leaderboard
+            await setDoc(doc(db, "leaderboard", playerStats.id), playerStats);
+            
+            setupModal.style.display = "none";
+            showProfile();
+        } catch (error) {
+            console.error("Firestore Error:", error);
+            // If Firestore fails (permissions), we still let them play locally
+            setupModal.style.display = "none";
+            showProfile();
+        }
     });
 
     function showProfile() {
@@ -43,46 +63,64 @@ document.addEventListener("DOMContentLoaded", () => {
         profileCard.classList.remove("hidden");
     }
 
-    if (!localStorage.getItem("playerProfile")) setupModal.style.display = "flex";
-    else showProfile();
+    if (!localStorage.getItem("playerProfile")) {
+        setupModal.style.display = "flex";
+    } else {
+        showProfile();
+    }
 
+    // Lobby Buttons
     document.getElementById("createRoomBtn").addEventListener("click", async () => {
         const roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
         const profile = JSON.parse(localStorage.getItem("playerProfile"));
+        
         await set(ref(database, "rooms/" + roomId), {
             board: Array(9).fill(""),
             turn: "X",
             status: "waiting",
             players: { X: profile }
         });
+
         sessionStorage.setItem("myRole", "X");
         window.location.href = `game.html?room=${roomId}`;
     });
 
     document.getElementById("joinRoomBtn").addEventListener("click", async () => {
-        const roomId = document.getElementById("roomCodeInput").value.trim().toUpperCase();
-        const snapshot = await get(ref(database, "rooms/" + roomId));
-        if (!snapshot.exists() || snapshot.val().players.O) return alert("Invalid Room");
+        const code = document.getElementById("roomCodeInput").value.trim().toUpperCase();
+        if (!code) return alert("Enter a code!");
+
+        const snapshot = await get(ref(database, "rooms/" + code));
+        if (!snapshot.exists()) return alert("Room not found!");
         
+        const data = snapshot.val();
+        if (data.players.O) return alert("Room is full!");
+
         const profile = JSON.parse(localStorage.getItem("playerProfile"));
-        await set(ref(database, `rooms/${roomId}/players/O`), profile);
-        await set(ref(database, `rooms/${roomId}/status`), "playing");
-        
+        await set(ref(database, `rooms/${code}/players/O`), profile);
+        await set(ref(database, `rooms/${code}/status`), "playing");
+
         sessionStorage.setItem("myRole", "O");
-        window.location.href = `game.html?room=${roomId}`;
+        window.location.href = `game.html?room=${code}`;
     });
 
-    // Leaderboard Logic
+    // Leaderboard Toggle
     document.getElementById("leaderboardBtn").addEventListener("click", async () => {
-        const q = query(collection(db, "leaderboard"), orderBy("rating", "desc"), limit(5));
-        const snap = await getDocs(q);
+        const modal = document.getElementById("leaderboardModal");
         const list = document.getElementById("leaderboardList");
-        list.innerHTML = "";
-        snap.forEach(doc => {
-            const data = doc.data();
-            list.innerHTML += `<p>${data.name}: ${data.rating} pts</p>`;
-        });
-        document.getElementById("leaderboardModal").style.display = "flex";
+        list.innerHTML = "Loading...";
+        modal.style.display = "flex";
+
+        try {
+            const q = query(collection(db, "leaderboard"), orderBy("rating", "desc"), limit(5));
+            const snap = await getDocs(q);
+            list.innerHTML = "";
+            snap.forEach(doc => {
+                const d = doc.data();
+                list.innerHTML += `<div class="lb-item"><strong>${d.name}</strong>: ${d.rating}</div>`;
+            });
+        } catch (e) {
+            list.innerHTML = "Leaderboard currently unavailable.";
+        }
     });
 
     document.getElementById("closeLeaderboard").onclick = () => {
