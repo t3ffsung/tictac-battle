@@ -9,8 +9,7 @@
 </head>
 <body>
     <div id="lobbyOverlay" class="modal" style="display:flex;">
-        <div class="modal-content">
-            <div class="loader"></div>
+        <div class="modal-content" style="text-align: center;">
             <h3>Waiting for Opponent...</h3>
             <p style="margin: 15px 0;">Share Room Code:</p>
             <h2 id="displayRoomCode" style="color:#39ff14; font-size: 2.5rem; letter-spacing: 3px;"></h2>
@@ -42,6 +41,7 @@
 
         <div id="gameStatus" class="status-msg">Your Turn</div>
         <button id="exitBtn" class="btn ghost">Exit Arena</button>
+        <button id="audioToggleBtn" class="btn ghost" style="margin-top:10px;">🔊 Audio: ON</button>
     </div>
 
     <script type="module" src="js/game.js"></script>
