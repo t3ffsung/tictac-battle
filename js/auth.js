@@ -1,6 +1,6 @@
 import { database, db } from "./firebase.js";
 import { ref, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { doc, setDoc, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const avatarOptions = document.querySelectorAll(".avatar-option");
@@ -18,27 +18,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     saveProfileBtn.onclick = async (e) => {
-        e.preventDefault(); // Stop page from refreshing
-        
+        e.preventDefault();
         const name = document.getElementById("playerNameInput").value.trim();
-        if (!name) return alert("Please enter a name!");
-        if (!selectedAvatar) return alert("Please select an avatar!");
+        if (!name || !selectedAvatar) return alert("Select name and avatar!");
 
         const id = "p_" + Date.now();
         const profile = { id, name, avatar: selectedAvatar, rating: 1000 };
         
         try {
-            // Save to LocalStorage so game can start immediately
             localStorage.setItem("playerProfile", JSON.stringify(profile));
-            
-            // Attempt to save to Firestore Leaderboard
             await setDoc(doc(db, "leaderboard", id), profile);
-            
             setupModal.style.display = "none";
-            location.reload(); // Refresh to show the profile card
+            location.reload();
         } catch (error) {
             console.error("Firebase Error:", error);
-            // Even if Firestore fails, we allow local play
             setupModal.style.display = "none";
             location.reload();
         }
@@ -54,7 +47,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("profileRating").innerText = p.rating;
     }
 
-    // --- Room Logic ---
     document.getElementById("createRoomBtn").onclick = async () => {
         const p = JSON.parse(localStorage.getItem("playerProfile"));
         if (!p) return alert("Create a profile first!");
@@ -85,5 +77,31 @@ document.addEventListener("DOMContentLoaded", () => {
         await set(ref(database, `rooms/${code}/status`), "playing");
         sessionStorage.setItem("myRole", "O");
         location.href = `game.html?room=${code}`;
+    };
+
+    // FIX 2: Restore Leaderboard functionality
+    document.getElementById("leaderboardBtn").onclick = async () => {
+        const modal = document.getElementById("leaderboardModal");
+        const list = document.getElementById("leaderboardList");
+        list.innerHTML = "Loading...";
+        modal.style.display = "flex";
+
+        try {
+            const q = query(collection(db, "leaderboard"), orderBy("rating", "desc"), limit(5));
+            const snap = await getDocs(q);
+            list.innerHTML = "";
+            snap.forEach(doc => {
+                const d = doc.data();
+                list.innerHTML += `<div style="padding:10px; border-bottom:1px solid rgba(255,255,255,0.1);">
+                    <strong>${d.name}</strong> - ${d.rating} pts
+                </div>`;
+            });
+        } catch (e) {
+            list.innerHTML = "Leaderboard currently unavailable.";
+        }
+    };
+
+    document.getElementById("closeLeaderboard").onclick = () => {
+        document.getElementById("leaderboardModal").style.display = "none";
     };
 });
