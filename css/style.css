@@ -25,11 +25,13 @@ input { width: 100%; padding: 12px; border-radius: 8px; border: none; margin-top
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 999; }
 .modal-content { background: #141423; padding: 25px; border-radius: 15px; width: 90%; max-width: 350px; border: 1px solid #39ff14; }
 
-.avatar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0; }
-.avatar-option { width: 100%; cursor: pointer; border-radius: 50%; border: 2px solid transparent; transition: 0.2s; }
-.avatar-option.selected { border-color: #39ff14; box-shadow: 0 0 15px #39ff14; transform: scale(1.1); }
+/* Leaderboard Scrolling Fix */
+#leaderboardList { max-height: 50vh; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; }
+#leaderboardList::-webkit-scrollbar { width: 5px; }
+#leaderboardList::-webkit-scrollbar-thumb { background: #00f5ff; border-radius: 5px; }
+.lb-item { display: flex; align-items: center; gap: 15px; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.lb-item img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #39ff14; }
 
-/* Game Specific */
 .game-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .p-tag { font-size: 0.7rem; background: rgba(0,245,255,0.1); padding: 5px 10px; border-radius: 5px; border: 1px solid #00f5ff; }
 .pot-tag { font-family: 'Orbitron'; color: #39ff14; font-size: 0.9rem; }
@@ -45,17 +47,3 @@ input { width: 100%; padding: 12px; border-radius: 8px; border: none; margin-top
 
 .status-msg { margin: 20px 0; font-family: 'Orbitron'; color: #39ff14; text-shadow: 0 0 5px #39ff14; }
 .hidden { display: none !important; }
-.hidden { display: none !important; }
-.modal { 
-    position: fixed; 
-    inset: 0; 
-    background: rgba(0,0,0,0.9); 
-    display: none; /* Changed from flex to none by default */
-    align-items: center; 
-    justify-content: center; 
-    z-index: 999; 
-}
-/* This class will be applied via JS to show the modal */
-#setupModal[style*="display: flex"] {
-    display: flex !important;
-}
