@@ -1,3 +1,7 @@
+window.onload = function () {
+
+console.log("auth.js loaded");
+
 const setupModal = document.getElementById("setupModal");
 const saveBtn = document.getElementById("saveProfileBtn");
 const nameInput = document.getElementById("playerNameInput");
@@ -15,25 +19,37 @@ function checkProfile() {
 }
 
 avatars.forEach(avatar => {
-    avatar.addEventListener("click", () => {
+    avatar.addEventListener("click", function () {
         avatars.forEach(a => a.style.border = "none");
         avatar.style.border = "2px solid #39ff14";
         selectedAvatar = avatar.src;
     });
 });
 
-saveBtn.addEventListener("click", () => {
+saveBtn.addEventListener("click", function () {
+    console.log("Save clicked");
+
     const name = nameInput.value.trim();
-    if (!name || !selectedAvatar) {
-        alert("Enter name and select avatar");
+
+    if (name === "") {
+        alert("Enter your name");
+        return;
+    }
+
+    if (selectedAvatar === "") {
+        alert("Select an avatar");
         return;
     }
 
     const profile = {
-        id: Date.now().toString(),
-        name,
+        id: "user_" + Date.now(),
+        name: name,
         avatar: selectedAvatar,
-        rating: 1000
+        rating: 1000,
+        wins: 0,
+        losses: 0,
+        draws: 0,
+        streak: 0
     };
 
     localStorage.setItem("ttb_profile", JSON.stringify(profile));
@@ -49,3 +65,5 @@ function loadProfile(profile) {
 }
 
 checkProfile();
+
+};
