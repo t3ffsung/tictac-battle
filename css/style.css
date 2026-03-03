@@ -166,3 +166,15 @@ input {
     font-size: 2rem;
     font-family: 'Orbitron';
 }
+.avatar-option {
+  outline: none;
+}
+
+.avatar-option:focus {
+  outline: none;
+}
+
+.avatar-option.selected {
+  border: 3px solid #00f0ff;
+  box-shadow: 0 0 15px #00f0ff;
+}
