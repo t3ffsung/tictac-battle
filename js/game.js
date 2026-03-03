@@ -1,8 +1,7 @@
-import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { db } from "./firebase.js";
+import { ref, onValue, update, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 window.onload = function () {
-
-    const db = window.firebaseDB;
 
     const urlParams = new URLSearchParams(window.location.search);
     const roomId = urlParams.get("room");
@@ -18,56 +17,79 @@ window.onload = function () {
 
     const roomRef = ref(db, "rooms/" + roomId);
 
+    let playerSymbol = "";
+    let currentTurn = "X";
+
+    // Listen to room
     onValue(roomRef, (snapshot) => {
 
         const data = snapshot.val();
         if (!data) return;
 
-        const players = data.players || {};
+        let players = data.players || {};
 
+        // Assign player2 if empty
         if (!players.player2 && profile.id !== players.player1.id) {
+            players.player2 = profile;
             update(roomRef, {
-                players: {
-                    ...players,
-                    player2: profile
-                },
-                status: "playing"
+                players: players,
+                status: "playing",
+                board: ["","","","","","","","",""],
+                turn: "X"
             });
+            return;
+        }
+
+        if (players.player1.id === profile.id) {
+            playerSymbol = "X";
+        } else if (players.player2 && players.player2.id === profile.id) {
+            playerSymbol = "O";
         }
 
         if (data.status === "playing") {
-            document.getElementById("roomStatus").textContent = "Game Started!";
-            initializeBoard(roomRef);
+            document.getElementById("roomStatus").textContent =
+                data.turn === playerSymbol ? "Your Turn" : "Opponent's Turn";
+
+            currentTurn = data.turn;
+            renderBoard(data.board || ["","","","","","","","",""], roomRef, playerSymbol, currentTurn);
         }
 
     });
 
 };
 
-function initializeBoard(roomRef) {
+function renderBoard(boardState, roomRef, playerSymbol, currentTurn) {
 
     const boardElement = document.getElementById("board");
     boardElement.classList.remove("hidden");
-
     boardElement.innerHTML = "";
 
-    for (let i = 0; i < 9; i++) {
+    boardState.forEach((value, index) => {
 
         const cell = document.createElement("div");
         cell.classList.add("cell");
 
         const span = document.createElement("span");
+        span.textContent = value;
         cell.appendChild(span);
 
         cell.addEventListener("click", function () {
 
-            if (span.textContent !== "") return;
+            if (value !== "") return;
+            if (playerSymbol !== currentTurn) return;
 
-            span.textContent = "X";
+            const newBoard = [...boardState];
+            newBoard[index] = playerSymbol;
+
+            update(roomRef, {
+                board: newBoard,
+                turn: playerSymbol === "X" ? "O" : "X"
+            });
 
         });
 
         boardElement.appendChild(cell);
-    }
+
+    });
 
 }
