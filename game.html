@@ -8,7 +8,7 @@
     <meta name="theme-color" content="#0a0a12">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="https://api.dicebear.com/7.x/bottts/svg?seed=Cyber">
+    <link rel="icon" href="https://api.dicebear.com/7.x/bottts/svg?seed=Cyber" type="image/svg+xml">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -17,8 +17,11 @@
         <div class="modal-content" style="text-align: center;">
             <h3>Waiting for Opponent...</h3>
             <p style="margin: 15px 0;">Share Room Code:</p>
-            <h2 id="displayRoomCode" style="color:#39ff14; font-size: 2.5rem; letter-spacing: 3px;"></h2>
-            <button class="btn ghost" onclick="location.href='index.html'">Cancel</button>
+            <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+                <h2 id="displayRoomCode" style="color:#39ff14; font-size: 2.5rem; letter-spacing: 3px; margin: 0;"></h2>
+                <button id="copyCodeBtn" class="btn secondary" style="width: auto; padding: 10px; margin: 0;">📋</button>
+            </div>
+            <button class="btn ghost" onclick="location.href='index.html'" style="margin-top: 20px;">Cancel</button>
         </div>
     </div>
 
@@ -33,9 +36,17 @@
 
     <div class="container">
         <div class="game-header">
-            <div id="playerX" class="p-tag">X: Waiting...</div>
-            <div class="pot-tag">Pot: 100 🪙</div>
-            <div id="playerO" class="p-tag">O: Waiting...</div>
+            <div id="playerX" class="p-tag" style="position: relative;">
+                X: Waiting...
+                <div id="msgX" class="chat-msg-display hidden"></div>
+                <div class="timer-container"><div id="timerX" class="timer-bar"></div></div>
+            </div>
+            <div class="pot-tag">Pot: <span id="potAmount">100</span> 🪙</div>
+            <div id="playerO" class="p-tag" style="position: relative;">
+                O: Waiting...
+                <div id="msgO" class="chat-msg-display hidden"></div>
+                <div class="timer-container"><div id="timerO" class="timer-bar"></div></div>
+            </div>
         </div>
 
         <div class="board-container">
@@ -54,12 +65,24 @@
         </div>
 
         <div id="gameStatus" class="status-msg">Your Turn</div>
-        <button id="exitBtn" class="btn ghost">Exit Arena</button>
+
+        <div class="chat-container" id="chatBox" style="display:none;">
+            <button class="chat-btn" data-msg="Hurry up!">Hurry up!</button>
+            <button class="chat-btn" data-msg="Have mercy!">Have mercy!</button>
+            <button class="chat-btn" data-msg="Oops!">Oops!</button>
+            <button class="chat-btn" data-msg="😂">😂</button>
+            <button class="chat-btn" data-msg="😡">😡</button>
+            <button class="chat-btn" data-msg="👍">👍</button>
+        </div>
+
+        <button id="exitBtn" class="btn ghost" style="margin-top: 15px;">Exit Arena</button>
         <button id="audioToggleBtn" class="btn ghost" style="margin-top:10px;">🔊 Audio: ON</button>
     </div>
 
     <script type="module" src="js/game.js"></script>
     <script>
+        const savedTheme = localStorage.getItem("selectedTheme") || "theme-default";
+        document.body.classList.add(savedTheme);
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('service-worker.js');
         }
