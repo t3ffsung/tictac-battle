@@ -7,8 +7,8 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
-
 </head>
+
 <body>
 
 <div class="background-glow"></div>
@@ -18,17 +18,29 @@
     <h1 class="logo">Battle Room</h1>
 
     <div class="card">
+
         <h2>Room Code:</h2>
-        <h2 id="roomCodeDisplay"></h2>
-        <p id="roomStatus">Waiting for opponent...</p>
+        <p id="roomCodeText">Loading...</p>
+
     </div>
 
-    <div id="board" class="board hidden"></div>
+    <div class="board" id="board">
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+    </div>
 
-    <button class="btn ghost" onclick="window.location.href='index.html'">Exit</button>
+    <button id="exitBtn" class="btn secondary">Exit</button>
 
 </div>
 
+<script type="module" src="js/firebase.js"></script>
 <script type="module" src="js/game.js"></script>
 
 </body>
