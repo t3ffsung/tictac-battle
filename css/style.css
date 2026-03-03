@@ -45,3 +45,17 @@ input { width: 100%; padding: 12px; border-radius: 8px; border: none; margin-top
 
 .status-msg { margin: 20px 0; font-family: 'Orbitron'; color: #39ff14; text-shadow: 0 0 5px #39ff14; }
 .hidden { display: none !important; }
+.hidden { display: none !important; }
+.modal { 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(0,0,0,0.9); 
+    display: none; /* Changed from flex to none by default */
+    align-items: center; 
+    justify-content: center; 
+    z-index: 999; 
+}
+/* This class will be applied via JS to show the modal */
+#setupModal[style*="display: flex"] {
+    display: flex !important;
+}
