@@ -11,11 +11,13 @@
     <div class="background-glow"></div>
     <div class="container">
         <h1 class="logo">TicTac <span>Battle</span></h1>
+        
         <div id="profileCard" class="card hidden">
-            <img id="profileAvatar" class="profile-avatar" src="" alt="">
+            <img id="profileAvatar" class="profile-avatar" src="" alt="Avatar">
             <h2 id="profileName"></h2>
             <p>Rating: <span id="profileRating">1000</span></p>
         </div>
+
         <div class="card lobby-card">
             <button class="btn primary" id="createRoomBtn">Create Room</button>
             <div class="join-section">
@@ -31,17 +33,17 @@
             <h2>Create Your Player</h2>
             <input type="text" id="playerNameInput" placeholder="Enter Your Name">
             <div class="avatar-grid">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Cyber" class="avatar-option">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Ninja" class="avatar-option">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Alien" class="avatar-option">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=King" class="avatar-option">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Warrior" class="avatar-option">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Cyber" class="avatar-option" alt="Cyber">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Ninja" class="avatar-option" alt="Ninja">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Alien" class="avatar-option" alt="Alien">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=King" class="avatar-option" alt="King">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Warrior" class="avatar-option" alt="Warrior">
             </div>
             <button class="btn primary" id="saveProfileBtn">Save & Enter Arena</button>
         </div>
     </div>
 
-    <div id="leaderboardModal" class="modal hidden">
+    <div id="leaderboardModal" class="modal" style="display:none;">
         <div class="modal-content">
             <h2>Top Warriors</h2>
             <div id="leaderboardList"></div>
