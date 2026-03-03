@@ -7,6 +7,12 @@ const roomId = urlParams.get("room");
 const myRole = sessionStorage.getItem("myRole");
 const profile = JSON.parse(localStorage.getItem("playerProfile"));
 
+if (!roomId || !myRole) window.location.href = "index.html";
+
+// FIX 1: Display room code instantly and enable Exit button
+document.getElementById("displayRoomCode").innerText = roomId;
+document.getElementById("exitBtn").onclick = () => location.href = "index.html";
+
 const roomRef = ref(database, "rooms/" + roomId);
 const winPatterns = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 
@@ -15,7 +21,6 @@ onValue(roomRef, async (snap) => {
     if (!data) return;
 
     if (data.status === "playing") document.getElementById("lobbyOverlay").style.display = "none";
-    document.getElementById("displayRoomCode").innerText = roomId;
     document.getElementById("playerX").innerText = `X: ${data.players.X.name}`;
     if(data.players.O) document.getElementById("playerO").innerText = `O: ${data.players.O.name}`;
     
