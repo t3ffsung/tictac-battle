@@ -141,3 +141,28 @@ input {
 .avatar-option:hover {
     box-shadow: 0 0 15px #39ff14;
 }
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.cell {
+    width: 100%;
+    padding-top: 100%;
+    position: relative;
+    background: rgba(20,20,35,0.7);
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0,245,255,0.3);
+}
+
+.cell span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    font-family: 'Orbitron';
+}
