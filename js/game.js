@@ -17,47 +17,57 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const roomRef = ref(database, "rooms/" + roomId);
 
-  const roomCodeDisplay = document.querySelector(".room-code-text");
+  // 🔥 Show Room Code
+  const roomCodeText = document.getElementById("roomCodeText");
+  roomCodeText.textContent = roomId;
 
-  if (roomCodeDisplay) {
-    roomCodeDisplay.textContent = roomId;
-  }
+  // 🔥 Exit Button
+  const exitBtn = document.getElementById("exitBtn");
+  exitBtn.addEventListener("click", () => {
+    window.location.href = "/";
+  });
 
   const cells = document.querySelectorAll(".cell");
 
+  // 🔥 Listen for board changes
   onValue(roomRef, (snapshot) => {
+
     const data = snapshot.val();
+
     if (!data) return;
 
-    if (data.board && cells.length === 9) {
-      data.board.forEach((value, index) => {
-        if (cells[index]) {
-          cells[index].textContent = value;
-        }
-      });
-    }
+    if (!data.board) return;
+
+    data.board.forEach((value, index) => {
+      cells[index].textContent = value;
+    });
+
   });
 
+  // 🔥 Cell click logic
   cells.forEach((cell, index) => {
+
     cell.addEventListener("click", () => {
 
       onValue(roomRef, (snapshot) => {
+
         const data = snapshot.val();
         if (!data) return;
 
-        if (data.board[index] === "") {
-          const newBoard = [...data.board];
-          newBoard[index] = data.turn;
+        if (data.board[index] !== "") return;
 
-          update(roomRef, {
-            board: newBoard,
-            turn: data.turn === "X" ? "O" : "X"
-          });
-        }
+        const newBoard = [...data.board];
+        newBoard[index] = data.turn;
+
+        update(roomRef, {
+          board: newBoard,
+          turn: data.turn === "X" ? "O" : "X"
+        });
 
       }, { onlyOnce: true });
 
     });
+
   });
 
 });
