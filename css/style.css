@@ -1,58 +1,104 @@
-* { 
-    margin: 0; 
-    padding: 0; 
-    box-sizing: border-box; 
-    user-select: none; 
-    -webkit-tap-highlight-color: transparent; 
-    touch-action: manipulation; 
-}
-body { background: #0a0a12; font-family: 'Poppins', sans-serif; color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow-x: hidden; }
+* { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+body { font-family: 'Poppins', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
 
-.background-glow { position: fixed; width: 600px; height: 600px; background: radial-gradient(circle, #00f5ff 0%, transparent 70%); filter: blur(150px); opacity: 0.3; animation: pulse 8s infinite alternate; z-index: -1; }
+/* Theme: Default (Cyber) */
+body.theme-default { background: #0a0a12; color: white; }
+.theme-default .btn.primary { background: #00f5ff; color: black; }
+.theme-default .btn.secondary { background: #39ff14; color: black; }
+.theme-default .btn.ghost { border-color: #00f5ff; color: #00f5ff; }
+.theme-default .background-glow { background: radial-gradient(circle, #00f5ff 0%, transparent 70%); }
+.theme-default .cell { border-color: rgba(0,245,255,0.1); }
+.theme-default .cell:hover { background: rgba(0,245,255,0.1); }
+
+/* Theme: Neon */
+body.theme-neon { background: #11001c; color: #fff; }
+.theme-neon .btn.primary { background: #ff00ff; color: white; box-shadow: 0 0 10px #ff00ff; }
+.theme-neon .btn.secondary { background: #00ffff; color: black; box-shadow: 0 0 10px #00ffff; }
+.theme-neon .btn.ghost { border-color: #ff00ff; color: #ff00ff; }
+.theme-neon .background-glow { background: radial-gradient(circle, #ff00ff 0%, transparent 70%); }
+.theme-neon .cell { border-color: rgba(255,0,255,0.2); }
+.theme-neon .cell:hover { background: rgba(255,0,255,0.2); }
+
+/* Theme: Dark */
+body.theme-dark { background: #000; color: #ccc; }
+.theme-dark .btn.primary { background: #333; color: white; border: 1px solid #555; }
+.theme-dark .btn.secondary { background: #555; color: white; }
+.theme-dark .btn.ghost { border-color: #555; color: #aaa; }
+.theme-dark .background-glow { display: none; }
+.theme-dark .cell { border-color: #333; }
+.theme-dark .cell:hover { background: #111; }
+
+/* Theme: Retro */
+body.theme-retro { background: #2b2b2b; color: #ffcc00; font-family: 'Courier New', monospace; }
+.theme-retro .btn.primary { background: #ffcc00; color: #000; border-radius: 0; }
+.theme-retro .btn.secondary { background: #ff6600; color: #000; border-radius: 0; }
+.theme-retro .btn.ghost { border-color: #ffcc00; color: #ffcc00; border-radius: 0; }
+.theme-retro .background-glow { display: none; }
+.theme-retro .cell { border-radius: 0; border: 2px solid #ffcc00; }
+.theme-retro .cell:hover { background: rgba(255,204,0,0.2); }
+
+/* Theme: Female (Blossom Pink) */
+body.theme-female { background: #fff0f5; color: #d147a3; }
+body.theme-female .card, body.theme-female .modal-content { background: rgba(255, 255, 255, 0.9); border-color: #ffb6c1; }
+.theme-female .btn.primary { background: #ffb6c1; color: #fff; }
+.theme-female .btn.secondary { background: #ff69b4; color: #fff; }
+.theme-female .btn.ghost { border-color: #ff69b4; color: #ff69b4; }
+.theme-female .background-glow { background: radial-gradient(circle, #ffb6c1 0%, transparent 70%); opacity: 0.5; }
+.theme-female .cell { border-color: #ffb6c1; background: #fff; color: #ff69b4; }
+.theme-female .cell:hover { background: #ffe4e1; }
+.theme-female .logo span { color: #ff69b4; text-shadow: 0 0 10px #ffb6c1; }
+
+/* General Elements */
+.background-glow { position: fixed; width: 600px; height: 600px; filter: blur(150px); opacity: 0.3; animation: pulse 8s infinite alternate; z-index: -1; }
 @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.3); } }
 
-.container { text-align: center; width: 90%; max-width: 400px; padding: 20px; }
-.logo { font-family: 'Orbitron'; font-size: 2.2rem; margin-bottom: 25px; }
-.logo span { color: #39ff14; text-shadow: 0 0 10px #39ff14; }
+.container { text-align: center; width: 90%; max-width: 400px; padding: 20px; z-index: 1; position: relative; }
+.logo { font-family: 'Orbitron', sans-serif; font-size: 2.2rem; margin-bottom: 25px; }
 
-.card { background: rgba(20,20,35,0.8); backdrop-filter: blur(10px); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid rgba(0,245,255,0.2); }
+.card { background: rgba(20,20,35,0.8); backdrop-filter: blur(10px); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1); }
 .profile-header { display: flex; align-items: center; gap: 15px; text-align: left; }
-.profile-avatar { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #00f5ff; }
+.profile-avatar { width: 50px; height: 50px; border-radius: 50%; }
 .profile-info h2 { font-size: 1rem; }
-.profile-info p { font-size: 0.8rem; color: #00f5ff; }
+.profile-info p { font-size: 0.8rem; }
 
-.btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.2s; font-family: 'Orbitron'; text-transform: uppercase; font-size: 0.8rem; }
-.primary { background: #00f5ff; color: black; }
-.secondary { background: #39ff14; color: black; }
-.ghost { background: transparent; border: 1px solid #00f5ff; color: #00f5ff; }
-.btn:hover { transform: scale(1.03); box-shadow: 0 0 15px currentColor; }
+.btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.2s; font-family: 'Orbitron', sans-serif; text-transform: uppercase; font-size: 0.8rem; }
+.btn:hover { transform: scale(1.03); }
 
-input { 
-    width: 100%; padding: 12px; border-radius: 8px; border: none; margin-top: 10px; background: rgba(255,255,255,0.1); color: white; text-align: center; 
-    user-select: auto; /* Re-enables text selection specifically for typing in inputs */
-}
+input, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); margin-top: 10px; background: rgba(255,255,255,0.1); color: inherit; text-align: center; user-select: auto; font-family: inherit; }
+select option { background: #141423; color: white; }
+.theme-female select option { background: #fff; color: #d147a3; }
 
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 999; }
-.modal-content { background: #141423; padding: 25px; border-radius: 15px; width: 90%; max-width: 350px; border: 1px solid #39ff14; }
+.theme-female .modal { background: rgba(255,182,193,0.8); }
+.modal-content { background: #141423; padding: 25px; border-radius: 15px; width: 90%; max-width: 350px; border: 1px solid rgba(255,255,255,0.2); }
 
 #leaderboardList { max-height: 50vh; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; }
-#leaderboardList::-webkit-scrollbar { width: 5px; }
-#leaderboardList::-webkit-scrollbar-thumb { background: #00f5ff; border-radius: 5px; }
 .lb-item { display: flex; align-items: center; gap: 15px; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-.lb-item img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #39ff14; }
+.lb-item img { width: 40px; height: 40px; border-radius: 50%; }
 
-.game-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.p-tag { font-size: 0.7rem; background: rgba(0,245,255,0.1); padding: 5px 10px; border-radius: 5px; border: 1px solid #00f5ff; }
-.pot-tag { font-family: 'Orbitron'; color: #39ff14; font-size: 0.9rem; }
+.game-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; position: relative; }
+.p-tag { font-size: 0.7rem; padding: 5px 10px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.2); position: relative; }
+.pot-tag { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; font-weight: bold; }
 
 .board-container { position: relative; width: 300px; margin: 0 auto; }
 .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.cell { aspect-ratio: 1; background: rgba(255,255,255,0.05); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-family: 'Orbitron'; cursor: pointer; transition: 0.2s; border: 1px solid rgba(0,245,255,0.1); }
-.cell:hover { background: rgba(0,245,255,0.1); }
+.cell { aspect-ratio: 1; background: rgba(255,255,255,0.05); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-family: 'Orbitron', sans-serif; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
 
 #winLine { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
-.win-animate { stroke: #39ff14; stroke-width: 8; stroke-linecap: round; stroke-dasharray: 400; stroke-dashoffset: 400; animation: drawLine 0.6s forwards; }
+.win-animate { stroke: currentColor; stroke-width: 8; stroke-linecap: round; stroke-dasharray: 400; stroke-dashoffset: 400; animation: drawLine 0.6s forwards; }
 @keyframes drawLine { to { stroke-dashoffset: 0; } }
 
-.status-msg { margin: 20px 0; font-family: 'Orbitron'; color: #39ff14; text-shadow: 0 0 5px #39ff14; }
+.status-msg { margin: 20px 0; font-family: 'Orbitron', sans-serif; font-weight: bold; }
 .hidden { display: none !important; }
+
+/* Timers & Chat UI */
+.timer-container { width: 100%; height: 5px; background: rgba(255,255,255,0.1); border-radius: 5px; margin-top: 5px; overflow: hidden; }
+.timer-bar { height: 100%; width: 100%; background: #39ff14; transition: width 1s linear; }
+.theme-female .timer-bar { background: #ff69b4; }
+
+.chat-container { display: flex; gap: 5px; margin-top: 15px; flex-wrap: wrap; justify-content: center; }
+.chat-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: inherit; padding: 5px 10px; border-radius: 15px; font-size: 0.7rem; cursor: pointer; }
+.chat-msg-display { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 5px 10px; border-radius: 10px; font-size: 0.8rem; animation: fadeOut 3s forwards; pointer-events: none; z-index: 20; white-space: nowrap; }
+.theme-female .chat-msg-display { background: rgba(255,182,193,0.9); color: #000; }
+
+@keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; } }
