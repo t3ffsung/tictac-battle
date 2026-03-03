@@ -7,10 +7,10 @@ import {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  const setupModal = document.getElementById("setupModal");
+  const avatarOptions = document.querySelectorAll(".avatar-option");
   const saveProfileBtn = document.getElementById("saveProfileBtn");
   const playerNameInput = document.getElementById("playerNameInput");
-  const avatarOptions = document.querySelectorAll(".avatar-option");
+  const setupModal = document.getElementById("setupModal");
 
   const createRoomBtn = document.getElementById("createRoomBtn");
   const joinRoomBtn = document.getElementById("joinRoomBtn");
@@ -20,51 +20,60 @@ document.addEventListener("DOMContentLoaded", () => {
   const profileAvatar = document.getElementById("profileAvatar");
   const profileName = document.getElementById("profileName");
 
-  let selectedAvatar = "";
-  let playerData = null;
+  let selectedAvatar = null;
 
-  // 🔥 Avatar Selection
+  // 🔥 Avatar click logic
   avatarOptions.forEach(option => {
-    option.addEventListener("click", () => {
+    option.addEventListener("click", function () {
+
       avatarOptions.forEach(o => o.classList.remove("selected"));
-      option.classList.add("selected");
-      selectedAvatar = option.src;
+
+      this.classList.add("selected");
+
+      selectedAvatar = this.getAttribute("src");
+
+      console.log("Selected avatar:", selectedAvatar); // DEBUG
     });
   });
 
-  // 🔥 Save Profile
+  // 🔥 Save profile
   saveProfileBtn.addEventListener("click", () => {
+
     const name = playerNameInput.value.trim();
 
-    if (!name || !selectedAvatar) {
-      alert("Enter name & select avatar");
+    if (!name) {
+      alert("Enter your name");
       return;
     }
 
-    playerData = {
+    if (!selectedAvatar) {
+      alert("Select an avatar");
+      return;
+    }
+
+    const profile = {
       name: name,
       avatar: selectedAvatar,
       rating: 1000
     };
 
-    localStorage.setItem("playerProfile", JSON.stringify(playerData));
+    localStorage.setItem("playerProfile", JSON.stringify(profile));
 
     setupModal.style.display = "none";
 
     showProfile();
   });
 
-  // 🔥 Show Profile Card
   function showProfile() {
-    const saved = JSON.parse(localStorage.getItem("playerProfile"));
-    if (!saved) return;
+    const profile = JSON.parse(localStorage.getItem("playerProfile"));
+    if (!profile) return;
 
-    profileAvatar.src = saved.avatar;
-    profileName.textContent = saved.name;
+    profileAvatar.src = profile.avatar;
+    profileName.textContent = profile.name;
     profileCard.classList.remove("hidden");
   }
 
-  // 🔥 Auto check profile
+  // 🔥 Check existing profile
   if (!localStorage.getItem("playerProfile")) {
     setupModal.style.display = "flex";
   } else {
@@ -73,8 +82,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 🔥 Create Room
   createRoomBtn.addEventListener("click", async () => {
-    const roomId = Math.random().toString(36).substring(2, 8);
 
+    const roomId = Math.random().toString(36).substring(2, 8);
     const profile = JSON.parse(localStorage.getItem("playerProfile"));
 
     await set(ref(database, "rooms/" + roomId), {
@@ -91,14 +100,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 🔥 Join Room
   joinRoomBtn.addEventListener("click", async () => {
+
     const roomId = roomCodeInput.value.trim();
     if (!roomId) return;
 
-    const roomRef = ref(database, "rooms/" + roomId);
-    const snapshot = await get(roomRef);
+    const snapshot = await get(ref(database, "rooms/" + roomId));
 
     if (!snapshot.exists()) {
-      alert("Room does not exist");
+      alert("Room not found");
       return;
     }
 
