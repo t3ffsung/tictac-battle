@@ -1,0 +1,24 @@
+{
+  "name": "TicTac Battle",
+  "short_name": "TicTac",
+  "description": "Multiplayer Tic Tac Toe Arena",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#0a0a12",
+  "theme_color": "#00f5ff",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://api.dicebear.com/7.x/bottts/svg?seed=Cyber",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://api.dicebear.com/7.x/bottts/svg?seed=Cyber",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
