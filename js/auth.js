@@ -1,41 +1,56 @@
-import { database, db } from "./firebase.js";
+import { database, db, auth, provider } from "./firebase.js";
+import { signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { ref, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-import { doc, setDoc, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { doc, setDoc, getDoc, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const avatarOptions = document.querySelectorAll(".avatar-option");
-    const saveProfileBtn = document.getElementById("saveProfileBtn");
-    const setupModal = document.getElementById("setupModal");
-    let selectedAvatar = null;
+    const isMuted = localStorage.getItem("audioMuted") === "true";
+    const bgm = new Audio("https://actions.google.com/sounds/v1/science_fiction/scifi_groove.ogg");
+    bgm.loop = true; bgm.volume = 0.2;
+    if (!isMuted) bgm.play().catch(e => console.log("Auto-play blocked"));
 
-    avatarOptions.forEach(opt => {
-        opt.onclick = (e) => {
-            e.preventDefault();
-            avatarOptions.forEach(o => o.classList.remove("selected"));
-            opt.classList.add("selected");
-            selectedAvatar = opt.src;
+    function playClick() {
+        if (!isMuted) new Audio("https://actions.google.com/sounds/v1/ui/button_click.ogg").play();
+    }
+
+    const audioBtn = document.getElementById("audioToggleBtn");
+    if(audioBtn) {
+        audioBtn.innerText = isMuted ? "🔇 Audio: OFF" : "🔊 Audio: ON";
+        audioBtn.onclick = () => {
+            playClick();
+            localStorage.setItem("audioMuted", !isMuted);
+            location.reload();
         };
-    });
+    }
 
-    saveProfileBtn.onclick = async (e) => {
-        e.preventDefault();
-        const name = document.getElementById("playerNameInput").value.trim();
-        if (!name || !selectedAvatar) return alert("Select name and avatar!");
+    const setupModal = document.getElementById("setupModal");
+    const signInBtn = document.getElementById("googleSignInBtn");
 
-        const id = "p_" + Date.now();
-        const profile = { id, name, avatar: selectedAvatar, rating: 1000 };
-        
-        try {
-            localStorage.setItem("playerProfile", JSON.stringify(profile));
-            await setDoc(doc(db, "leaderboard", id), profile);
-            setupModal.style.display = "none";
-            location.reload();
-        } catch (error) {
-            console.error("Firebase Error:", error);
-            setupModal.style.display = "none";
-            location.reload();
-        }
-    };
+    if (signInBtn) {
+        signInBtn.onclick = async (e) => {
+            e.preventDefault();
+            playClick();
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                
+                const userRef = doc(db, "leaderboard", user.uid);
+                const userSnap = await getDoc(userRef);
+                let currentRating = 1000;
+                if (userSnap.exists()) currentRating = userSnap.data().rating;
+
+                const profile = { id: user.uid, name: user.displayName, avatar: user.photoURL, rating: currentRating };
+                localStorage.setItem("playerProfile", JSON.stringify(profile));
+                await setDoc(userRef, profile, { merge: true });
+                
+                setupModal.style.display = "none";
+                location.reload();
+            } catch (error) {
+                console.error("Auth Error:", error);
+                alert("Sign in failed!");
+            }
+        };
+    }
 
     if (!localStorage.getItem("playerProfile")) {
         setupModal.style.display = "flex";
@@ -48,22 +63,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     document.getElementById("createRoomBtn").onclick = async () => {
+        playClick();
         const p = JSON.parse(localStorage.getItem("playerProfile"));
         if (!p) return alert("Create a profile first!");
         if (p.rating < 50) return alert("Insufficient points!");
 
         const code = Math.random().toString(36).substr(2, 6).toUpperCase();
-        await set(ref(database, "rooms/" + code), {
-            board: Array(9).fill(""),
-            turn: "X", 
-            status: "waiting", 
-            players: { X: p }
-        });
+        await set(ref(database, "rooms/" + code), { board: Array(9).fill(""), turn: "X", status: "waiting", players: { X: p }});
         sessionStorage.setItem("myRole", "X");
         location.href = `game.html?room=${code}`;
     };
 
     document.getElementById("joinRoomBtn").onclick = async () => {
+        playClick();
         const code = document.getElementById("roomCodeInput").value.trim().toUpperCase();
         if (!code) return alert("Enter a room code!");
         
@@ -79,8 +91,8 @@ document.addEventListener("DOMContentLoaded", () => {
         location.href = `game.html?room=${code}`;
     };
 
-    // FIX 2: Restore Leaderboard functionality
     document.getElementById("leaderboardBtn").onclick = async () => {
+        playClick();
         const modal = document.getElementById("leaderboardModal");
         const list = document.getElementById("leaderboardList");
         list.innerHTML = "Loading...";
@@ -92,9 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
             list.innerHTML = "";
             snap.forEach(doc => {
                 const d = doc.data();
-                list.innerHTML += `<div style="padding:10px; border-bottom:1px solid rgba(255,255,255,0.1);">
-                    <strong>${d.name}</strong> - ${d.rating} pts
-                </div>`;
+                list.innerHTML += `<div style="padding:10px; border-bottom:1px solid rgba(255,255,255,0.1);"><strong>${d.name}</strong> - ${d.rating} pts</div>`;
             });
         } catch (e) {
             list.innerHTML = "Leaderboard currently unavailable.";
@@ -102,6 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     document.getElementById("closeLeaderboard").onclick = () => {
+        playClick();
         document.getElementById("leaderboardModal").style.display = "none";
     };
 });
