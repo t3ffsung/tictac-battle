@@ -58,6 +58,8 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("profileAvatar").src = p.avatar;
         document.getElementById("profileName").innerText = p.name;
         document.getElementById("profileRating").innerText = p.rating;
+        // This is the fix: Hides the modal if profile already exists
+        setupModal.style.display = "none"; 
     }
 
     document.getElementById("logoutBtn").onclick = async () => {
